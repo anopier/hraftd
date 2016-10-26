@@ -24,6 +24,9 @@ type Store interface {
 
 	// Join joins the node, reachable at addr, to the cluster.
 	Join(addr string) error
+	
+	// Returns the address of the leader
+	Leader() string
 }
 
 // Service provides HTTP service.
@@ -78,6 +81,8 @@ func (s *Service) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 		s.handleKeyRequest(w, r)
 	} else if r.URL.Path == "/join" {
 		s.handleJoin(w, r)
+	} else if r.URL.Path == "/leader" {
+		s.handleLeader(w)
 	} else {
 		w.WriteHeader(http.StatusNotFound)
 	}
@@ -105,6 +110,10 @@ func (s *Service) handleJoin(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
+}
+
+func (s *Service) handleLeader(w http.ResponseWriter) {
+	io.WriteString(w, s.store.Leader())
 }
 
 func (s *Service) handleKeyRequest(w http.ResponseWriter, r *http.Request) {
