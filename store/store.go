@@ -176,6 +176,10 @@ func (s *Store) Join(addr string) error {
 	return nil
 }
 
+func (s *Store) Leader() string {
+	return s.raft.Leader()
+}
+
 type fsm Store
 
 // Apply applies a Raft log entry to the key-value store.
