@@ -180,6 +180,10 @@ func (s *Store) Leader() string {
 	return s.raft.Leader()
 }
 
+func (s *Store) IsLeader() bool {
+	return s.raft.State() == raft.Leader
+}
+
 type fsm Store
 
 // Apply applies a Raft log entry to the key-value store.
